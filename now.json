@@ -1,0 +1,18 @@
+{
+	"version": 2,
+	"regions": [
+		"bom1"
+	],
+	"builds": [
+		{
+			"src": "handler/app.go",
+			"use": "@now/go"
+		}
+	],
+	"routes": [
+		{
+			"src": "/(.*)",
+			"dest": "handler/app.go"
+		}
+	]
+}
