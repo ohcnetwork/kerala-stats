@@ -16,7 +16,7 @@ git rebase "${remote_name}/${main_branch}"
 chmod +x kerala_stats
 ./kerala_stats
 
-git add *.json
+git add \*.json
 
 set +e  # Grep succeeds with nonzero exit codes to show results.
 git status | grep 'new file\|modified'

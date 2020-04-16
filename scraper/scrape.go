@@ -134,6 +134,8 @@ func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 	var j, m = 0, 0
 	r1 := strings.Split(data1[j], " ")
 	r2 := strings.Split(data2[m], " ")
+	pr1 := r1
+	pr2 := r2
 	var pos, dis, act, det, tot, hos, home, tod, dpos, ddis, dact, ddet, dtot, dhos, dhome, dtod = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	for i := 0; i < l; i++ {
 		if r1[0] == b[i].Date {
@@ -145,10 +147,13 @@ func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 			ddis = atoi(r1[2])
 			ddet = atoi(r1[4])
 			if i != 0 {
-				dact = act - atoi(r1[3])
+				dact = act - atoi(pr1[3])
+			} else {
+				dact = act
 			}
 			j++
 			if j < len(data1) {
+				pr1 = r1
 				r1 = strings.Split(data1[j], " ")
 			}
 		}
@@ -158,13 +163,19 @@ func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 			home = atoi(r2[3])
 			tod = atoi(r2[4])
 			if i != 0 {
-				dtot = tot - atoi(r2[1])
-				dhos = hos - atoi(r2[2])
-				dhome = home - atoi(r2[3])
-				dtod = tod - atoi(r2[4])
+				dtot = tot - atoi(pr2[1])
+				dhos = hos - atoi(pr2[2])
+				dhome = home - atoi(pr2[3])
+				dtod = tod - atoi(pr2[4])
+			} else {
+				dtot = tot
+				dhos = hos
+				dhome = home
+				dtod = tod
 			}
 			m++
 			if m < len(data2) {
+				pr2 = r2
 				r2 = strings.Split(data2[m], " ")
 			}
 		}
