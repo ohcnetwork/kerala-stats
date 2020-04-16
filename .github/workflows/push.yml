@@ -3,7 +3,7 @@ name: Scrape and update Json
 on:
   schedule:
     # At every 15th minute past every hour from 18 through 20
-    - cron: "*/15 * * * *"
+    - cron: "*/15 18-20 * * *"
   push:
     branches:
       - master
