@@ -1,22 +1,16 @@
 name: Scrape and update Json
-
 on:
-  schedule:
-    # At every 15th minute past every hour from 18 through 20
-    - cron: "*/15 18-20 * * *"
   push:
-    branches:
-      - master
-
+    branches: [ master ]
+  schedule:
+    - cron: '*/15 18-20 * * *'
 jobs:
   update-json:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v1
-      - name: push
-        run: |
-          bash updatejson.sh
-          echo "the job completed"
-        env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+    - uses: actions/checkout@v2
+    - name: Run a one-line script
+      run: bash updatejson.sh && echo "the job completed"
+      env:
+        GITHUB_TOKEN: ${{ secrets.github_token }}
