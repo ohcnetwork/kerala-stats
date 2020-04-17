@@ -10,7 +10,7 @@ jobs:
     timeout-minutes: 5
     steps:
     - uses: actions/checkout@v2
-    - name: Run a one-line script
+    - name: update-json
       run: bash updatejson.sh && echo "the job completed"
       env:
         GITHUB_TOKEN: ${{ secrets.github_token }}
