@@ -3,7 +3,7 @@ on:
   push:
     branches: [ master ]
   schedule:
-    - cron: '30 13 * * *'
+    - cron: '*/30 13-18 * * *'
 jobs:
   update-json:
     runs-on: ubuntu-latest
