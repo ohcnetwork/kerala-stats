@@ -66,7 +66,7 @@ func getDoc(source string, dist ...string) goquery.Document {
 	var res *http.Response
 	var err error
 	if len(dist) > 0 {
-		res, err = http.PostForm(source, url.Values{"dist": {dist[0]}})
+		res, err = http.PostForm(source, url.Values{"district": {dist[0]}, "submit": {"View"}})
 	} else {
 		res, err = http.Get(source)
 	}
@@ -86,7 +86,7 @@ func getDoc(source string, dist ...string) goquery.Document {
 
 func ScrapeLastUpdated() string {
 	doc := getDoc("https://dashboard.kerala.gov.in/quarantine-view-public.php")
-	s := doc.Find(".breadcrumb-item > small:nth-child(1)").Text()
+	s := doc.Find(".breadcrumb-item > i:nth-child(1)").Text()
 	s = strings.ToUpper(strings.TrimSpace(strings.Split(s, "Update:")[1]))
 	return s
 }
@@ -120,19 +120,25 @@ func ScrapeTestReport() []TestReport {
 
 func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 	defer wg.Done()
-	doc := getDoc("https://dashboard.kerala.gov.in/ajax_disp_dist_list.php", k)
-	data1 := strings.Split(strings.TrimSpace(strings.Replace(strings.Replace(doc.Find("body").Text(), " ", "", -1), "						", "", -1)), "\n\n\n\n")
-	for i := 0; i < len(data1); i++ {
-		data1[i] = strings.Replace(data1[i], "\n", " ", -1)
-	}
-	data1 = data1[:len(data1)-1]
+	doc := getDoc("https://dashboard.kerala.gov.in/dailyreporting-view-public-districtwise.php", k)
+	var row []string
+	var data1 [][]string
+	doc.Find("#disp_dist_dte").Each(func(index int, tablehtml *goquery.Selection) {
+		tablehtml.Find("tr").Each(func(indextr int, rowhtml *goquery.Selection) {
+			rowhtml.Find("td").Each(func(indexth int, tablecell *goquery.Selection) {
+				row = append(row, tablecell.Text())
+			})
+			data1 = append(data1, row)
+			row = nil
+		})
+	})
 	doc = getDoc("https://dashboard.kerala.gov.in/ajax_quarantine_dist_list.php", k)
 	data2 := strings.Split(strings.TrimSpace(strings.Replace(strings.Replace(doc.Find("body").Text(), " ", "", -1), "						", "", -1)), "\n\n\n")
 	for i := 0; i < len(data2); i++ {
 		data2[i] = strings.Replace(data2[i], "\n", " ", -1)
 	}
 	var j, m = 0, 0
-	r1 := strings.Split(data1[j], " ")
+	r1 := data1[j]
 	r2 := strings.Split(data2[m], " ")
 	pr1 := r1
 	pr2 := r2
@@ -154,7 +160,7 @@ func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 			j++
 			if j < len(data1) {
 				pr1 = r1
-				r1 = strings.Split(data1[j], " ")
+				r1 = data1[j]
 			}
 		}
 		if r2[0] == b[i].Date {
