@@ -66,7 +66,7 @@ func getDoc(source string, dist ...string) goquery.Document {
 	var res *http.Response
 	var err error
 	if len(dist) > 0 {
-		res, err = http.PostForm(source, url.Values{"district": {dist[0]}, "submit": {"View"}})
+		res, err = http.PostForm(source, url.Values{"district": {dist[0]}, "submit": {"View"}, "dist": {dist[0]}})
 	} else {
 		res, err = http.Get(source)
 	}
