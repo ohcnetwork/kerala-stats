@@ -63,29 +63,54 @@ func atoi(s string) int {
 }
 
 func getDoc(source string, dist ...string) goquery.Document {
-	var res *http.Response
-	var err error
+	client := &http.Client{}
+	var req *http.Request
 	if len(dist) > 0 {
-		res, err = http.PostForm(source, url.Values{"district": {dist[0]}, "submit": {"View"}, "dist": {dist[0]}})
+		data := url.Values{"district": {dist[0]}, "submit": {"View"}, "vw": {"View"}}
+		req, _ = http.NewRequest("POST", source, strings.NewReader(data.Encode()))
+		req.Host = "dashboard.kerala.gov.in"
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0")
+		req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+		req.Header.Set("Accept-Language", "en-GB,en;q=0.5")
+		req.Header.Set("Origin", "https://dashboard.kerala.gov.in")
+		req.Header.Set("Referer", "https://dashboard.kerala.gov.in/dailyreporting-view-public-districtwise.php")
+		req.Header.Set("Connection", "keep-alive")
+		res, err := client.Do(req)
+		if err != nil {
+			panic(err)
+		}
+		defer res.Body.Close()
+		if res.StatusCode != 200 {
+			panic(fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status))
+		}
+		doc, err := goquery.NewDocumentFromReader(res.Body)
+		if err != nil {
+			panic(err)
+		}
+		return *doc
 	} else {
-		res, err = http.Get(source)
+		req, _ = http.NewRequest("GET", source, nil)
+		req.Host = "dashboard.kerala.gov.in"
+		req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0")
+		res, err := client.Do(req)
+		if err != nil {
+			panic(err)
+		}
+		defer res.Body.Close()
+		if res.StatusCode != 200 {
+			panic(fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status))
+		}
+		doc, err := goquery.NewDocumentFromReader(res.Body)
+		if err != nil {
+			panic(err)
+		}
+		return *doc
 	}
-	if err != nil {
-		panic(err)
-	}
-	defer res.Body.Close()
-	if res.StatusCode != 200 {
-		panic(fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status))
-	}
-	doc, err := goquery.NewDocumentFromReader(res.Body)
-	if err != nil {
-		panic(err)
-	}
-	return *doc
 }
 
 func ScrapeLastUpdated() string {
-	doc := getDoc("https://dashboard.kerala.gov.in/quarantine-view-public.php")
+	doc := getDoc("https://dashboard.kerala.gov.in/index.php")
 	s := doc.Find(".breadcrumb-item > i:nth-child(1)").Text()
 	s = strings.ToUpper(strings.TrimSpace(strings.Split(s, "Update:")[1]))
 	return s
@@ -123,7 +148,7 @@ func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 	doc := getDoc("https://dashboard.kerala.gov.in/dailyreporting-view-public-districtwise.php", k)
 	var row []string
 	var data1 [][]string
-	doc.Find("#disp_dist_dte").Each(func(index int, tablehtml *goquery.Selection) {
+	doc.Find(".table-hover > tbody:nth-child(3)").Each(func(index int, tablehtml *goquery.Selection) {
 		tablehtml.Find("tr").Each(func(indextr int, rowhtml *goquery.Selection) {
 			rowhtml.Find("td").Each(func(indexth int, tablecell *goquery.Selection) {
 				row = append(row, tablecell.Text())
@@ -132,14 +157,21 @@ func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 			row = nil
 		})
 	})
-	doc = getDoc("https://dashboard.kerala.gov.in/ajax_quarantine_dist_list.php", k)
-	data2 := strings.Split(strings.TrimSpace(strings.Replace(strings.Replace(doc.Find("body").Text(), " ", "", -1), "						", "", -1)), "\n\n\n")
-	for i := 0; i < len(data2); i++ {
-		data2[i] = strings.Replace(data2[i], "\n", " ", -1)
-	}
+	doc = getDoc("https://dashboard.kerala.gov.in/quar_dst_wise_public.php", k)
+	var data2 [][]string
+	doc.Find("table.table:nth-child(2) > tbody:nth-child(3)").Each(func(index int, tablehtml *goquery.Selection) {
+		tablehtml.Find("tr").Each(func(indextr int, rowhtml *goquery.Selection) {
+			rowhtml.Find("td").Each(func(indexth int, tablecell *goquery.Selection) {
+				row = append(row, tablecell.Text())
+			})
+			data2 = append(data2, row)
+			row = nil
+		})
+	})
+	data2 = data2[1:]
 	var j, m = 0, 0
 	r1 := data1[j]
-	r2 := strings.Split(data2[m], " ")
+	r2 := data2[m]
 	pr1 := r1
 	pr2 := r2
 	var pos, dis, act, det, tot, hos, home, tod, dpos, ddis, dact, ddet, dtot, dhos, dhome, dtod = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -182,7 +214,7 @@ func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 			m++
 			if m < len(data2) {
 				pr2 = r2
-				r2 = strings.Split(data2[m], " ")
+				r2 = data2[m]
 			}
 		}
 		b[i].RLock()
