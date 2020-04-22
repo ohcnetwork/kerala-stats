@@ -1,4 +1,4 @@
-name: Scrape and update Json
+name: Scrape and Update Json
 on:
   push:
     branches: [ master ]
