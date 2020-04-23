@@ -9,6 +9,8 @@ import (
 	"sync"
 	"time"
 
+	"log"
+
 	"github.com/PuerkitoBio/goquery"
 )
 
@@ -57,7 +59,7 @@ type TestReport struct {
 func atoi(s string) int {
 	i, err := strconv.Atoi(s)
 	if err != nil {
-		panic(err)
+		log.Panicln(err)
 	}
 	return i
 }
@@ -81,15 +83,15 @@ func getDoc(source string, referer string, dist ...string) goquery.Document {
 	req.Header.Set("Connection", "keep-alive")
 	res, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		log.Panicln(err)
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
-		panic(fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status))
+		log.Panicln(fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status))
 	}
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
-		panic(err)
+		log.Panicln(err)
 	}
 	return *doc
 }
@@ -103,6 +105,7 @@ func ScrapeLastUpdated() string {
 }
 
 func ScrapeTestReport() []TestReport {
+	start := time.Now()
 	doc := getDoc(
 		"https://dashboard.kerala.gov.in/testing-view-public.php",
 		"https://dashboard.kerala.gov.in/quar_dst_wise_public.php",
@@ -129,11 +132,13 @@ func ScrapeTestReport() []TestReport {
 			Today:    atoi(rows[i][5]),
 		}
 	}
+	log.Printf("scraped test reports in %v", time.Now().Sub(start))
 	return b
 }
 
 func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 	defer wg.Done()
+	start := time.Now()
 	url1 := "https://dashboard.kerala.gov.in/dailyreporting-view-public-districtwise.php"
 	url2 := "https://dashboard.kerala.gov.in/quar_dst_wise_public.php"
 	doc := getDoc(url1, url1, k)
@@ -228,6 +233,7 @@ func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 		}
 		b[i].RUnlock()
 	}
+	log.Printf("scraped history of %v in %v\n", districtMap[k], time.Now().Sub(start))
 }
 
 func initHistory() ([]History, int) {
@@ -257,6 +263,7 @@ func initHistory() ([]History, int) {
 }
 
 func ScrapeHistory() []History {
+	start := time.Now()
 	var wg sync.WaitGroup
 	b, n := initHistory()
 	for i := 1601; i <= 1614; i++ {
@@ -264,6 +271,7 @@ func ScrapeHistory() []History {
 		go scrapeHistorySingle(b, strconv.Itoa(i), n, &wg)
 	}
 	wg.Wait()
+	log.Printf("scraped history in %v", time.Now().Sub(start))
 	return b
 }
 
