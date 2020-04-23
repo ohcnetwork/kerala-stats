@@ -62,65 +62,54 @@ func atoi(s string) int {
 	return i
 }
 
-func getDoc(source string, dist ...string) goquery.Document {
+func getDoc(source string, referer string, dist ...string) goquery.Document {
 	client := &http.Client{}
 	var req *http.Request
 	if len(dist) > 0 {
 		data := url.Values{"district": {dist[0]}, "submit": {"View"}, "vw": {"View"}}
 		req, _ = http.NewRequest("POST", source, strings.NewReader(data.Encode()))
-		req.Host = "dashboard.kerala.gov.in"
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-		req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0")
-		req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
-		req.Header.Set("Accept-Language", "en-GB,en;q=0.5")
-		req.Header.Set("Origin", "https://dashboard.kerala.gov.in")
-		req.Header.Set("Referer", "https://dashboard.kerala.gov.in/dailyreporting-view-public-districtwise.php")
-		req.Header.Set("Connection", "keep-alive")
-		res, err := client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		defer res.Body.Close()
-		if res.StatusCode != 200 {
-			panic(fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status))
-		}
-		doc, err := goquery.NewDocumentFromReader(res.Body)
-		if err != nil {
-			panic(err)
-		}
-		return *doc
 	} else {
 		req, _ = http.NewRequest("GET", source, nil)
-		req.Host = "dashboard.kerala.gov.in"
-		req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0")
-		res, err := client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		defer res.Body.Close()
-		if res.StatusCode != 200 {
-			panic(fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status))
-		}
-		doc, err := goquery.NewDocumentFromReader(res.Body)
-		if err != nil {
-			panic(err)
-		}
-		return *doc
 	}
+	req.Host = "dashboard.kerala.gov.in"
+	req.Header.Set("Origin", "https://dashboard.kerala.gov.in")
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0")
+	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+	req.Header.Set("Accept-Language", "en-GB,en;q=0.5")
+	req.Header.Set("Referer", referer)
+	req.Header.Set("Connection", "keep-alive")
+	res, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer res.Body.Close()
+	if res.StatusCode != 200 {
+		panic(fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status))
+	}
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		panic(err)
+	}
+	return *doc
 }
 
 func ScrapeLastUpdated() string {
-	doc := getDoc("https://dashboard.kerala.gov.in/index.php")
+	url := "https://dashboard.kerala.gov.in/index.php"
+	doc := getDoc(url, url)
 	s := doc.Find(".breadcrumb-item > i:nth-child(1)").Text()
 	s = strings.ToUpper(strings.TrimSpace(strings.Split(s, "Update:")[1]))
 	return s
 }
 
 func ScrapeTestReport() []TestReport {
-	doc := getDoc("https://dashboard.kerala.gov.in/testing-view-public.php")
+	doc := getDoc(
+		"https://dashboard.kerala.gov.in/testing-view-public.php",
+		"https://dashboard.kerala.gov.in/quar_dst_wise_public.php",
+	)
 	var row []string
 	var rows [][]string
-	doc.Find(".table > tbody:nth-child(3)").Each(func(index int, tablehtml *goquery.Selection) {
+	doc.Find("table > tbody").Each(func(index int, tablehtml *goquery.Selection) {
 		tablehtml.Find("tr").Each(func(indextr int, rowhtml *goquery.Selection) {
 			rowhtml.Find("td").Each(func(indexth int, tablecell *goquery.Selection) {
 				row = append(row, tablecell.Text())
@@ -145,66 +134,66 @@ func ScrapeTestReport() []TestReport {
 
 func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 	defer wg.Done()
-	doc := getDoc("https://dashboard.kerala.gov.in/dailyreporting-view-public-districtwise.php", k)
+	url1 := "https://dashboard.kerala.gov.in/dailyreporting-view-public-districtwise.php"
+	url2 := "https://dashboard.kerala.gov.in/quar_dst_wise_public.php"
+	doc := getDoc(url1, url1, k)
 	var row []string
-	var data1 [][]string
+	data1 := make(map[string][]string)
 	doc.Find(".table-hover > tbody:nth-child(3)").Each(func(index int, tablehtml *goquery.Selection) {
 		tablehtml.Find("tr").Each(func(indextr int, rowhtml *goquery.Selection) {
 			rowhtml.Find("td").Each(func(indexth int, tablecell *goquery.Selection) {
 				row = append(row, tablecell.Text())
 			})
-			data1 = append(data1, row)
+			data1[row[0]] = row[1:]
 			row = nil
 		})
 	})
-	doc = getDoc("https://dashboard.kerala.gov.in/quar_dst_wise_public.php", k)
-	var data2 [][]string
+	doc = getDoc(url2, url2, k)
+	data2 := make(map[string][]string)
 	doc.Find("table.table:nth-child(2) > tbody:nth-child(3)").Each(func(index int, tablehtml *goquery.Selection) {
 		tablehtml.Find("tr").Each(func(indextr int, rowhtml *goquery.Selection) {
 			rowhtml.Find("td").Each(func(indexth int, tablecell *goquery.Selection) {
 				row = append(row, tablecell.Text())
 			})
-			data2 = append(data2, row)
+			if len(row) > 2 {
+				data2[row[0]] = row[1:]
+			}
 			row = nil
 		})
 	})
-	data2 = data2[1:]
 	var j, m = 0, 0
-	r1 := data1[j]
-	r2 := data2[m]
-	pr1 := r1
-	pr2 := r2
+	pr1 := []string{"0", "0", "0", "0"}
+	pr2 := []string{"0", "0", "0", "0"}
 	var pos, dis, act, det, tot, hos, home, tod, dpos, ddis, dact, ddet, dtot, dhos, dhome, dtod = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	for i := 0; i < l; i++ {
-		if r1[0] == b[i].Date {
-			pos += atoi(r1[1])
-			dis += atoi(r1[2])
-			act = atoi(r1[3])
-			det += atoi(r1[4])
-			dpos = atoi(r1[1])
-			ddis = atoi(r1[2])
-			ddet = atoi(r1[4])
+		if r1, ok := data1[b[i].Date]; ok {
+			pos += atoi(r1[0])
+			dis += atoi(r1[1])
+			act = atoi(r1[2])
+			det += atoi(r1[3])
+			dpos = atoi(r1[0])
+			ddis = atoi(r1[1])
+			ddet = atoi(r1[3])
 			if i != 0 {
-				dact = act - atoi(pr1[3])
+				dact = act - atoi(pr1[2])
 			} else {
 				dact = act
 			}
 			j++
 			if j < len(data1) {
 				pr1 = r1
-				r1 = data1[j]
 			}
 		}
-		if r2[0] == b[i].Date {
-			tot = atoi(r2[1])
-			hos = atoi(r2[2])
-			home = atoi(r2[3])
-			tod = atoi(r2[4])
+		if r2, ok := data2[b[i].Date]; ok {
+			tot = atoi(r2[0])
+			hos = atoi(r2[1])
+			home = atoi(r2[2])
+			tod = atoi(r2[3])
 			if i != 0 {
-				dtot = tot - atoi(pr2[1])
-				dhos = hos - atoi(pr2[2])
-				dhome = home - atoi(pr2[3])
-				dtod = tod - atoi(pr2[4])
+				dtot = tot - atoi(pr2[0])
+				dhos = hos - atoi(pr2[1])
+				dhome = home - atoi(pr2[2])
+				dtod = tod - atoi(pr2[3])
 			} else {
 				dtot = tot
 				dhos = hos
@@ -214,7 +203,6 @@ func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 			m++
 			if m < len(data2) {
 				pr2 = r2
-				r2 = data2[m]
 			}
 		}
 		b[i].RLock()
