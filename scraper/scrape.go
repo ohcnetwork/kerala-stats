@@ -14,6 +14,8 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+var sessid = ""
+
 var districtMap = map[string]string{"1614": "Thiruvananthapuram",
 	"1613": "Kollam",
 	"1612": "Pathanamthitta",
@@ -68,9 +70,10 @@ func getDoc(source string, referer string, dist ...string) goquery.Document {
 	client := &http.Client{}
 	var req *http.Request
 	if len(dist) > 0 {
-		data := url.Values{"district": {dist[0]}, "submit": {"View"}, "vw": {"View"}}
+		data := url.Values{"district": {dist[0]}, "vw": {"View"}}
 		req, _ = http.NewRequest("POST", source, strings.NewReader(data.Encode()))
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		req.Header.Set("Cookie", sessid)
 	} else {
 		req, _ = http.NewRequest("GET", source, nil)
 	}
@@ -92,6 +95,10 @@ func getDoc(source string, referer string, dist ...string) goquery.Document {
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		log.Panicln(err)
+	}
+	if sessid == "" {
+		sessid = strings.Split(res.Header.Get("Set-Cookie"), ";")[0]
+		log.Printf("set php session id as %v", strings.Split(sessid, "=")[1])
 	}
 	return *doc
 }
