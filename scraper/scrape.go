@@ -73,7 +73,7 @@ func getDoc(source string, referer string, dist ...string) goquery.Document {
 		data := url.Values{"district": {dist[0]}, "vw": {"View"}}
 		req, _ = http.NewRequest("POST", source, strings.NewReader(data.Encode()))
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-		req.Header.Set("Cookie", sessid)
+
 	} else {
 		req, _ = http.NewRequest("GET", source, nil)
 	}
@@ -84,6 +84,9 @@ func getDoc(source string, referer string, dist ...string) goquery.Document {
 	req.Header.Set("Accept-Language", "en-GB,en;q=0.5")
 	req.Header.Set("Referer", referer)
 	req.Header.Set("Connection", "keep-alive")
+	if sessid != "" {
+		req.Header.Set("Cookie", sessid)
+	}
 	res, err := client.Do(req)
 	if err != nil {
 		log.Panicln(err)
