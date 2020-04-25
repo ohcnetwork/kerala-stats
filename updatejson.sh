@@ -13,20 +13,19 @@ git config user.email "${GITHUB_ACTOR}@bots.github.com"
 git checkout "$target_branch"
 git rebase "${remote_name}/${main_branch}"
 
-chmod +x kerala_stats
-./kerala_stats
+chmod +x scrape && ./scrape
 
 git add \*.json
 
-set +e  # Grep succeeds with nonzero exit codes to show results.
+set +e 
 git status | grep 'new file\|modified'
 if [ $? -eq 0 ]
 then
     set -e
-    git commit -am "data updated on - $(date)"
-    git remote set-url "$remote_name" "$repo_uri" # includes access token
+    git commit -am "data updated on - $(TZ=":Asia/Kolkata" date)"
+    git remote set-url "$remote_name" "$repo_uri"
     git push --force-with-lease "$remote_name" "$target_branch"
 else
     set -e
-    echo "No changes since last run"
+    echo "no changes since last run"
 fi
