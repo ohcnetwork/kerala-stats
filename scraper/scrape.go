@@ -2,6 +2,7 @@ package scraper
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -13,8 +14,6 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 )
-
-var sessid = ""
 
 var districtMap = map[string]string{"1614": "Thiruvananthapuram",
 	"1613": "Kollam",
@@ -66,11 +65,11 @@ func atoi(s string) int {
 	return i
 }
 
-func getDoc(source string, referer string, dist ...string) goquery.Document {
+func getBody(source string, referer string, dist ...string) (io.Reader, string) {
 	client := &http.Client{}
 	var req *http.Request
-	if len(dist) > 0 {
-		data := url.Values{"district": {dist[0]}, "vw": {"View"}}
+	if len(dist) > 1 {
+		data := url.Values{"district": {dist[1]}, "vw": {"View"}}
 		req, _ = http.NewRequest("POST", source, strings.NewReader(data.Encode()))
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
@@ -84,24 +83,26 @@ func getDoc(source string, referer string, dist ...string) goquery.Document {
 	req.Header.Set("Accept-Language", "en-GB,en;q=0.5")
 	req.Header.Set("Referer", referer)
 	req.Header.Set("Connection", "keep-alive")
-	if sessid != "" {
-		req.Header.Set("Cookie", sessid)
+	if len(dist) > 0 {
+		req.Header.Set("Cookie", dist[0])
 	}
 	res, err := client.Do(req)
 	if err != nil {
 		log.Panicln(err)
 	}
-	defer res.Body.Close()
+	// defer res.Body.Close()
 	if res.StatusCode != 200 {
 		log.Panicln(fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status))
 	}
-	doc, err := goquery.NewDocumentFromReader(res.Body)
+	sessid := strings.Split(res.Header.Get("Set-Cookie"), ";")[0]
+	return res.Body, sessid
+}
+
+func getDoc(source string, referer string, dist ...string) goquery.Document {
+	body, _ := getBody(source, referer, dist...)
+	doc, err := goquery.NewDocumentFromReader(body)
 	if err != nil {
 		log.Panicln(err)
-	}
-	if sessid == "" {
-		sessid = strings.Split(res.Header.Get("Set-Cookie"), ";")[0]
-		log.Printf("set php session id as %v", strings.Split(sessid, "=")[1])
 	}
 	return *doc
 }
@@ -114,11 +115,18 @@ func ScrapeLastUpdated() string {
 	return s
 }
 
+func GetSID() string {
+	url := "https://dashboard.kerala.gov.in/index.php"
+	_, sid := getBody(url, url)
+	return sid
+}
+
 func ScrapeTestReport() []TestReport {
 	start := time.Now()
 	doc := getDoc(
 		"https://dashboard.kerala.gov.in/testing-view-public.php",
 		"https://dashboard.kerala.gov.in/quar_dst_wise_public.php",
+		GetSID(),
 	)
 	var row []string
 	var rows [][]string
@@ -151,7 +159,7 @@ func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 	start := time.Now()
 	url1 := "https://dashboard.kerala.gov.in/dailyreporting-view-public-districtwise.php"
 	url2 := "https://dashboard.kerala.gov.in/quar_dst_wise_public.php"
-	doc := getDoc(url1, url1, k)
+	doc := getDoc(url1, url1, GetSID(), k)
 	var row []string
 	data1 := make(map[string][]string)
 	doc.Find(".table-hover > tbody:nth-child(3)").Each(func(index int, tablehtml *goquery.Selection) {
@@ -163,7 +171,7 @@ func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 			row = nil
 		})
 	})
-	doc = getDoc(url2, url2, k)
+	doc = getDoc(url2, url2, GetSID(), k)
 	data2 := make(map[string][]string)
 	doc.Find("table.table:nth-child(2) > tbody:nth-child(3)").Each(func(index int, tablehtml *goquery.Selection) {
 		tablehtml.Find("tr").Each(func(indextr int, rowhtml *goquery.Selection) {
