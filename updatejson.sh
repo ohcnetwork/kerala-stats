@@ -15,7 +15,7 @@ git rebase "${remote_name}/${main_branch}"
 
 chmod +x scrape && ./scrape
 
-git add \*.json
+git add *.json
 
 set +e 
 git status | grep 'new file\|modified'
