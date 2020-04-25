@@ -201,18 +201,18 @@ func scrapeHistorySingle(b []History, k string, l int, wg *sync.WaitGroup) {
 		}
 		if r2, ok := data2[b[i].Date]; ok {
 			tot = atoi(r2[0])
-			hos = atoi(r2[1])
-			home = atoi(r2[2])
+			home = atoi(r2[1])
+			hos = atoi(r2[2])
 			tod = atoi(r2[3])
 			if i != 0 {
 				dtot = tot - atoi(pr2[0])
-				dhos = hos - atoi(pr2[1])
-				dhome = home - atoi(pr2[2])
+				dhome = home - atoi(pr2[1])
+				dhos = hos - atoi(pr2[2])
 				dtod = tod - atoi(pr2[3])
 			} else {
 				dtot = tot
-				dhos = hos
 				dhome = home
+				dhos = hos
 				dtod = tod
 			}
 			m++
