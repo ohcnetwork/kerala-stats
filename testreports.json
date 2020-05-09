@@ -1,1 +1,392 @@
-{"reports":[{"date":"26-03-2020","total":5342,"negative":3768,"positive":137,"pending":1437,"today":440},{"date":"27-03-2020","total":5679,"negative":4448,"positive":176,"pending":1055,"today":337},{"date":"28-03-2020","total":6067,"negative":5276,"positive":182,"pending":609,"today":388},{"date":"29-03-2020","total":6690,"negative":5518,"positive":202,"pending":970,"today":623},{"date":"30-03-2020","total":6991,"negative":6034,"positive":234,"pending":723,"today":301},{"date":"31-03-2020","total":7485,"negative":6381,"positive":241,"pending":863,"today":494},{"date":"01-04-2020","total":7965,"negative":7256,"positive":265,"pending":444,"today":480},{"date":"02-04-2020","total":8456,"negative":7622,"positive":286,"pending":548,"today":491},{"date":"03-04-2020","total":9139,"negative":8126,"positive":295,"pending":718,"today":683},{"date":"04-04-2020","total":9744,"negative":8586,"positive":306,"pending":852,"today":605},{"date":"05-04-2020","total":10221,"negative":9300,"positive":314,"pending":8,"today":607},{"date":"06-04-2020","total":10716,"negative":9607,"positive":327,"pending":13,"today":782},{"date":"07-04-2020","total":11232,"negative":10250,"positive":336,"pending":9,"today":646},{"date":"08-04-2020","total":11986,"negative":10906,"positive":345,"pending":9,"today":735},{"date":"09-04-2020","total":12710,"negative":11469,"positive":357,"pending":12,"today":884},{"date":"10-04-2020","total":13339,"negative":12335,"positive":364,"pending":7,"today":640},{"date":"11-04-2020","total":14163,"negative":12818,"positive":373,"pending":9,"today":972},{"date":"12-04-2020","total":14989,"negative":13802,"positive":375,"pending":2,"today":812},{"date":"13-04-2020","total":15683,"negative":14829,"positive":378,"pending":3,"today":476},{"date":"14-04-2020","total":16235,"negative":15488,"positive":386,"pending":8,"today":361},{"date":"15-04-2020","total":16475,"negative":16002,"positive":387,"pending":1,"today":86},{"date":"16-04-2020","total":17400,"negative":16459,"positive":394,"pending":7,"today":547},{"date":"17-04-2020","total":18029,"negative":17279,"positive":395,"pending":1,"today":355},{"date":"18-04-2020","total":18774,"negative":17763,"positive":399,"pending":4,"today":612},{"date":"19-04-2020","total":19351,"negative":18547,"positive":401,"pending":2,"today":403},{"date":"20-04-2020","total":19756,"negative":19074,"positive":408,"pending":7,"today":274},{"date":"21-04-2020","total":20252,"negative":19442,"positive":426,"pending":18,"today":384},{"date":"22-04-2020","total":20821,"negative":19998,"positive":437,"pending":11,"today":386},{"date":"23-04-2020","total":21334,"negative":20326,"positive":447,"pending":10,"today":561},{"date":"24-04-2020","total":21940,"negative":20830,"positive":450,"pending":3,"today":660},{"date":"25-04-2020","total":22360,"negative":21457,"positive":457,"pending":7,"today":446},{"date":"26-04-2020","total":22954,"negative":21997,"positive":468,"pending":11,"today":489},{"date":"27-04-2020","total":23271,"negative":22537,"positive":481,"pending":13,"today":253},{"date":"28-04-2020","total":23980,"negative":23277,"positive":485,"pending":4,"today":218},{"date":"29-04-2020","total":24952,"negative":23880,"positive":495,"pending":10,"today":577},{"date":"30-04-2020","total":25973,"negative":25135,"positive":497,"pending":2,"today":341},{"date":"01-05-2020","total":27150,"negative":26225,"positive":497,"pending":0,"today":428},{"date":"02-05-2020","total":31183,"negative":30358,"positive":499,"pending":2,"today":326},{"date":"03-05-2020","total":32217,"negative":31611,"positive":499,"pending":0,"today":107},{"date":"04-05-2020","total":33010,"negative":32315,"positive":499,"pending":0,"today":196},{"date":"05-05-2020","total":33800,"negative":33265,"positive":502,"pending":3,"today":33},{"date":"06-05-2020","total":34599,"negative":34063,"positive":502,"pending":0,"today":34},{"date":"07-05-2020","total":35171,"negative":34519,"positive":502,"pending":0,"today":150},{"date":"08-05-2020","total":35886,"negative":35355,"positive":503,"pending":1,"today":28}],"last_updated":"04-05-2020 8:08 PM"}
+{
+	"reports": [
+		{
+			"date": "27-03-2020",
+			"total": 5679,
+			"negative": 4448,
+			"positive": 176,
+			"today_positive": 39,
+			"pending": 1055,
+			"today": 337
+		},
+		{
+			"date": "28-03-2020",
+			"total": 6067,
+			"negative": 5276,
+			"positive": 182,
+			"today_positive": 6,
+			"pending": 609,
+			"today": 388
+		},
+		{
+			"date": "29-03-2020",
+			"total": 6690,
+			"negative": 5518,
+			"positive": 202,
+			"today_positive": 20,
+			"pending": 970,
+			"today": 623
+		},
+		{
+			"date": "30-03-2020",
+			"total": 6991,
+			"negative": 6034,
+			"positive": 234,
+			"today_positive": 32,
+			"pending": 723,
+			"today": 301
+		},
+		{
+			"date": "31-03-2020",
+			"total": 7485,
+			"negative": 6381,
+			"positive": 241,
+			"today_positive": 7,
+			"pending": 863,
+			"today": 494
+		},
+		{
+			"date": "01-04-2020",
+			"total": 7965,
+			"negative": 7256,
+			"positive": 265,
+			"today_positive": 24,
+			"pending": 444,
+			"today": 480
+		},
+		{
+			"date": "02-04-2020",
+			"total": 8456,
+			"negative": 7622,
+			"positive": 286,
+			"today_positive": 21,
+			"pending": 548,
+			"today": 491
+		},
+		{
+			"date": "03-04-2020",
+			"total": 9139,
+			"negative": 8126,
+			"positive": 295,
+			"today_positive": 9,
+			"pending": 718,
+			"today": 683
+		},
+		{
+			"date": "04-04-2020",
+			"total": 9744,
+			"negative": 8586,
+			"positive": 306,
+			"today_positive": 11,
+			"pending": 852,
+			"today": 605
+		},
+		{
+			"date": "05-04-2020",
+			"total": 10221,
+			"negative": 9300,
+			"positive": 314,
+			"today_positive": 8,
+			"pending": 607,
+			"today": 477
+		},
+		{
+			"date": "06-04-2020",
+			"total": 10716,
+			"negative": 9607,
+			"positive": 327,
+			"today_positive": 13,
+			"pending": 782,
+			"today": 495
+		},
+		{
+			"date": "07-04-2020",
+			"total": 11232,
+			"negative": 10250,
+			"positive": 336,
+			"today_positive": 9,
+			"pending": 646,
+			"today": 516
+		},
+		{
+			"date": "08-04-2020",
+			"total": 11986,
+			"negative": 10906,
+			"positive": 345,
+			"today_positive": 9,
+			"pending": 735,
+			"today": 754
+		},
+		{
+			"date": "09-04-2020",
+			"total": 12710,
+			"negative": 11469,
+			"positive": 357,
+			"today_positive": 12,
+			"pending": 884,
+			"today": 724
+		},
+		{
+			"date": "10-04-2020",
+			"total": 13339,
+			"negative": 12335,
+			"positive": 364,
+			"today_positive": 7,
+			"pending": 640,
+			"today": 629
+		},
+		{
+			"date": "11-04-2020",
+			"total": 14163,
+			"negative": 12818,
+			"positive": 373,
+			"today_positive": 9,
+			"pending": 972,
+			"today": 824
+		},
+		{
+			"date": "12-04-2020",
+			"total": 14989,
+			"negative": 13802,
+			"positive": 375,
+			"today_positive": 2,
+			"pending": 812,
+			"today": 826
+		},
+		{
+			"date": "13-04-2020",
+			"total": 15683,
+			"negative": 14829,
+			"positive": 378,
+			"today_positive": 3,
+			"pending": 476,
+			"today": 694
+		},
+		{
+			"date": "14-04-2020",
+			"total": 16235,
+			"negative": 15488,
+			"positive": 386,
+			"today_positive": 8,
+			"pending": 361,
+			"today": 552
+		},
+		{
+			"date": "15-04-2020",
+			"total": 16475,
+			"negative": 16002,
+			"positive": 387,
+			"today_positive": 1,
+			"pending": 86,
+			"today": 240
+		},
+		{
+			"date": "16-04-2020",
+			"total": 17400,
+			"negative": 16459,
+			"positive": 394,
+			"today_positive": 7,
+			"pending": 547,
+			"today": 925
+		},
+		{
+			"date": "17-04-2020",
+			"total": 18029,
+			"negative": 17279,
+			"positive": 395,
+			"today_positive": 1,
+			"pending": 355,
+			"today": 629
+		},
+		{
+			"date": "18-04-2020",
+			"total": 18774,
+			"negative": 17763,
+			"positive": 399,
+			"today_positive": 4,
+			"pending": 612,
+			"today": 745
+		},
+		{
+			"date": "19-04-2020",
+			"total": 19351,
+			"negative": 18547,
+			"positive": 401,
+			"today_positive": 2,
+			"pending": 403,
+			"today": 577
+		},
+		{
+			"date": "20-04-2020",
+			"total": 19756,
+			"negative": 19074,
+			"positive": 408,
+			"today_positive": 7,
+			"pending": 274,
+			"today": 405
+		},
+		{
+			"date": "21-04-2020",
+			"total": 20252,
+			"negative": 19442,
+			"positive": 426,
+			"today_positive": 18,
+			"pending": 384,
+			"today": 496
+		},
+		{
+			"date": "22-04-2020",
+			"total": 20821,
+			"negative": 19998,
+			"positive": 437,
+			"today_positive": 11,
+			"pending": 386,
+			"today": 569
+		},
+		{
+			"date": "23-04-2020",
+			"total": 21334,
+			"negative": 20326,
+			"positive": 447,
+			"today_positive": 10,
+			"pending": 561,
+			"today": 513
+		},
+		{
+			"date": "24-04-2020",
+			"total": 21940,
+			"negative": 20830,
+			"positive": 450,
+			"today_positive": 3,
+			"pending": 660,
+			"today": 606
+		},
+		{
+			"date": "25-04-2020",
+			"total": 22360,
+			"negative": 21457,
+			"positive": 457,
+			"today_positive": 7,
+			"pending": 446,
+			"today": 420
+		},
+		{
+			"date": "26-04-2020",
+			"total": 22954,
+			"negative": 21997,
+			"positive": 468,
+			"today_positive": 11,
+			"pending": 489,
+			"today": 594
+		},
+		{
+			"date": "27-04-2020",
+			"total": 23271,
+			"negative": 22537,
+			"positive": 481,
+			"today_positive": 13,
+			"pending": 253,
+			"today": 317
+		},
+		{
+			"date": "28-04-2020",
+			"total": 23980,
+			"negative": 23277,
+			"positive": 485,
+			"today_positive": 4,
+			"pending": 218,
+			"today": 709
+		},
+		{
+			"date": "29-04-2020",
+			"total": 24952,
+			"negative": 23880,
+			"positive": 495,
+			"today_positive": 10,
+			"pending": 577,
+			"today": 972
+		},
+		{
+			"date": "30-04-2020",
+			"total": 25973,
+			"negative": 25135,
+			"positive": 497,
+			"today_positive": 2,
+			"pending": 341,
+			"today": 1021
+		},
+		{
+			"date": "01-05-2020",
+			"total": 27150,
+			"negative": 26225,
+			"positive": 497,
+			"today_positive": 0,
+			"pending": 428,
+			"today": 1177
+		},
+		{
+			"date": "02-05-2020",
+			"total": 31183,
+			"negative": 30358,
+			"positive": 499,
+			"today_positive": 2,
+			"pending": 326,
+			"today": 4033
+		},
+		{
+			"date": "03-05-2020",
+			"total": 32217,
+			"negative": 31611,
+			"positive": 499,
+			"today_positive": 0,
+			"pending": 107,
+			"today": 1034
+		},
+		{
+			"date": "04-05-2020",
+			"total": 33010,
+			"negative": 32315,
+			"positive": 499,
+			"today_positive": 0,
+			"pending": 196,
+			"today": 793
+		},
+		{
+			"date": "05-05-2020",
+			"total": 33800,
+			"negative": 33265,
+			"positive": 502,
+			"today_positive": 3,
+			"pending": 33,
+			"today": 790
+		},
+		{
+			"date": "06-05-2020",
+			"total": 34599,
+			"negative": 34063,
+			"positive": 502,
+			"today_positive": 0,
+			"pending": 34,
+			"today": 799
+		},
+		{
+			"date": "07-05-2020",
+			"total": 35171,
+			"negative": 34519,
+			"positive": 502,
+			"today_positive": 0,
+			"pending": 150,
+			"today": 572
+		},
+		{
+			"date": "08-05-2020",
+			"total": 35886,
+			"negative": 35355,
+			"positive": 503,
+			"today_positive": 1,
+			"pending": 28,
+			"today": 715
+		}
+	],
+	"last_updated": "08-05-2020 8:32 PM"
+}
