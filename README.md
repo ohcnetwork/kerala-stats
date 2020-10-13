@@ -12,10 +12,7 @@ A database and API for COVID-19 stats for Kerala. Works by self-updating data pe
 | Time-series Test Reports                              | https://keralastats.coronasafe.live/testreports.json        |
 | Time-series Hotspots Histories                        | https://keralastats.coronasafe.live/hotspots_histories.json |
 | Latest Hotspots                                       | https://keralastats.coronasafe.live/hotspots.json           |
-| Time-series District-wise Zones Histories             | https://keralastats.coronasafe.live/zones_histories.json    |
-| Latest District-wise Zones                            | https://keralastats.coronasafe.live/zones.json              |
 
 ## Source
 
-- For COVID-19 Stats: [Official Gov of Kerala Dashboard](https://dashboard.kerala.gov.in/)
-- For Hotspots: [DHS Daily Bulletin](https://dhs.kerala.gov.in/category/daily-bulletin/)
+- For COVID-19 Stats and Hotspots: [Official Gov of Kerala Dashboard](https://dashboard.kerala.gov.in/)
