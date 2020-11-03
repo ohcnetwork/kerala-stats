@@ -25,6 +25,7 @@ then
     git commit -am "data updated on - $(TZ=":Asia/Kolkata" date)"
     git remote set-url "$remote_name" "$repo_uri"
     git push --force-with-lease "$remote_name" "$target_branch"
+    curl -X POST -d {} "https://api.netlify.com/build_hooks/${NETLIFY_ID}"
 else
     set -e
     echo "no changes since last run"
