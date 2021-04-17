@@ -23,6 +23,7 @@ jobs:
       id: timestamp
       run: echo "::set-output name=timestamp::$(TZ=":Asia/Kolkata" date)"
     - uses: stefanzweifel/git-auto-commit-action@v4
+      id: auto-commit-action
       with:
         file_pattern: ./*.json
         commit_message: data updated on - ${{ steps.timestamp.outputs.timestamp }}
