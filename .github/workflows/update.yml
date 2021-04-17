@@ -27,6 +27,7 @@ jobs:
         file_pattern: ./*.json
         commit_message: data updated on - ${{ steps.timestamp.outputs.timestamp }}
     - name: build site
-      run: curl -X POST -d {} "https://api.netlify.com/build_hooks/${NETLIFY_ID}"
+      if: steps.auto-commit-action.outputs.changes_detected == 'true'
+      run: curl -X POST -d {} "https://api.netlify.com/build_hooks/$NETLIFY_ID" && echo "changes detected, deploying site"
       env:
           NETLIFY_ID: ${{ secrets.NETLIFY_ID }}
