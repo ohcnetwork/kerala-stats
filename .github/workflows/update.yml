@@ -1,0 +1,30 @@
+name: Update 
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+  schedule:
+    - cron: '*/30 13-18 * * *'
+jobs:
+  update-json:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+    - uses: actions/checkout@v2
+    - uses: denoland/setup-deno@main
+      name: run scraper
+      with:
+        deno-version: v1.x
+    - run: |
+          deno run --allow-net --unstable --allow-plugin --allow-read --allow-write --allow-env ./index.ts
+      env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+    - name: get timestamp
+      id: timestamp
+      run: echo "::set-output name=timestamp::$(TZ=":Asia/Kolkata" date)"
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        file_pattern: *.json
+        commit_message: data updated on - ${{ steps.timestamp.outputs.timestamp }}
+    - name: build site
+      run: curl -X POST -d {} "https://api.netlify.com/build_hooks/${{ secrets.NETLIFY_ID }} 

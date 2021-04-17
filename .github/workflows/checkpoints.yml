@@ -1,0 +1,22 @@
+name: Weekly backup
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 0"
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - uses: actions/checkout@v2
+      - name: get timestamp
+        id: timestamp
+        run: echo "::set-output name=timestamp::$(date '+%d-%m-%Y')"
+      - name: backup
+        run: |
+          mkdir -p ./checkpoints/${{ steps.timestamp.outputs.timestamp }}
+          cp -rf *.json ./checkpoints/${{ steps.timestamp.outputs.timestamp }}
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          file_pattern: ./checkpoints/**/*.json
+          commit_message: weekly backup - ${{ steps.timestamp.outputs.timestamp }}
