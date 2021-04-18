@@ -1,0 +1,13 @@
+name: Build site manually
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: build site
+        run: curl -X POST -d {} "https://api.netlify.com/build_hooks/$NETLIFY_ID"
+        env:
+          NETLIFY_ID: ${{ secrets.NETLIFY_ID }}
