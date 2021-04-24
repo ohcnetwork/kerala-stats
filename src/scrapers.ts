@@ -179,7 +179,7 @@ export const scrapeHotspotsHistory = async (today: string) => {
             b.hotspots.push({
               district: d[0].item,
               lsgd: s[0].item,
-              wards: row[3],
+              wards: row[3].replace(/\n\s*/gi, " ").replace(/\s{2,}/gi, " "),
             });
           }
           row = [];
