@@ -147,7 +147,7 @@ export const scrapeHotspotsHistory = async (today: string) => {
           cheerio(rowhtml).find("td").each((_, tablecell) => {
             row.push(cheerio(tablecell).text().trim());
           });
-          if (row.length !== 0) {
+          if (row.length !== 0 && row[1] && row[2]) {
             row[2] = row[2].replace("Muncipality", "(M)");
             row[2] = row[2].replace("©", "(C)");
             if (row[2] === "Koothuparamba (M)") {
