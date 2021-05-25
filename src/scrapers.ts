@@ -60,7 +60,7 @@ export const scrapeTodaysHistory = async (today: string, last?: History) => {
   try {
     const t0 = performance.now();
     const s1 =
-      "section.col-lg-6:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > table:nth-child(1) > tbody:nth-child(3)";
+      "section.col-lg-6:nth-child(5) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > table:nth-child(1) > tbody:nth-child(4)";
     const s2 = "table.table:nth-child(1) > tbody:nth-child(3)";
 
     const data1 = scrapeTable(await getHTMLString(DAILYREPORTING_PAGE), s1);
@@ -141,7 +141,9 @@ export const scrapeHotspotsHistory = async (today: string) => {
     const html = await getHTMLString(HOTSPOTS_PAGE);
     const b: HotspotsHistory = { hotspots: [], date: today };
     let row: string[] = [];
-    cheerio.load(html)("div.card:nth-child(1) > div:nth-child(2) > table:nth-child(1) > tbody:nth-child(2)").each(
+    cheerio.load(html)(
+      "div.card:nth-child(1) > div:nth-child(2) > table:nth-child(1) > tbody:nth-child(2)",
+    ).each(
       (_, tablehtml) => {
         cheerio(tablehtml).find("tr").each((_, rowhtml) => {
           cheerio(rowhtml).find("td").each((_, tablecell) => {
