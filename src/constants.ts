@@ -11,7 +11,7 @@ export const DAILYREPORTING_PAGE =
   `${ORIGIN}/dailyreporting-view-public-districtwise.php`;
 export const QUARANTINED_PAGE = `${ORIGIN}/quarantined-datewise.php`;
 export const TESTING_PAGE = `${ORIGIN}/testing-view-public.php`;
-export const HOTSPOTS_PAGE = `${ORIGIN}/hotspots.php`;
+export const HOTSPOTS_PAGE = `${ORIGIN}/tpr-classification.php`;
 export const VACCINATION_PAGE = `${ORIGIN}/vaccination.php`;
 export const VAC_HISTORIES_FILE = "./vaccination_histories.json";
 export const VAC_LATEST_FILE = "./vaccination_latest.json";
