@@ -142,7 +142,7 @@ export const scrapeHotspotsHistory = async (today: string) => {
     const b: HotspotsHistory = { hotspots: [], date: today };
     let row: string[] = [];
     cheerio.load(html)(
-      "table.table-hover:nth-child(4) > tbody:nth-child(2)",
+      "table.table:nth-child(6) > tbody:nth-child(2)",
     ).each(
       (_, tablehtml) => {
         cheerio(tablehtml).find("tr").each((_, rowhtml) => {
