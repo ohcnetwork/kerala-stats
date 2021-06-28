@@ -5,7 +5,7 @@ export const TEST_REPORTS_FILE = "./testreports.json";
 export const HOTSPOT_HISTORIES_FILE = "./hotspots_histories.json";
 export const HOTSPOT_LATEST_FILE = "./hotspots.json";
 
-export const ORIGIN = "https://dashboard.kerala.gov.in";
+export const ORIGIN = "https://dashboard.kerala.gov.in/covid";
 export const INDEX_PAGE = `${ORIGIN}/index.php`;
 export const DAILYREPORTING_PAGE =
   `${ORIGIN}/dailyreporting-view-public-districtwise.php`;
