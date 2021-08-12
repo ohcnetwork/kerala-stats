@@ -16,7 +16,7 @@ jobs:
       with:
         deno-version: v1.x
     - run: |
-          deno run --allow-net --unstable --allow-plugin --allow-read --allow-write --allow-env ./index.ts
+          deno run --allow-net --unstable --allow-read --allow-write --allow-env ./index.ts
       env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
     - name: get timestamp
